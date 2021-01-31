@@ -1,18 +1,66 @@
-use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{near_bindgen};
+use borsh::{ BorshDeserialize, BorshSerialize };
+use near_sdk::{
+    env, near_bindgen, AccountId, PublicKey, Promise,
+    collections::{ Vector },
+    json_types::{ Base58PublicKey },
+};
 
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[near_bindgen]
-#[derive(Default, BorshDeserialize, BorshSerialize)]
-pub struct DummyContract {
-    
+#[derive(BorshDeserialize, BorshSerialize)]
+pub struct Message {
+    pub id: String,
+    pub pk: PublicKey,
+    pub did: String,
+    pub message: String,
+}
+
+#[derive(BorshDeserialize, BorshSerialize)]
+pub struct NearCeramic {
+    pub messages: Vector<Message>,
+}
+
+impl Default for NearCeramic {
+    fn default() -> Self {
+        Self {
+            messages: Vector::new(b"m".to_vec()),
+        }
+    }
 }
 
 #[near_bindgen]
-impl DummyContract {
+impl NearCeramic {
 
+    #[payable]
+    pub fn create_message(
+        &mut self,
+        to: AccountId,
+        public_key: Base58PublicKey,
+        message: String
+    ) -> Promise {
+        assert!(env::is_valid_account_id(to.as_bytes()), "Invalid account id");
+        // TODO: FINISH
+        // store message reference
+        let pk: PublicKey = public_key.into();
+
+        self.messages.push(&Message {
+            pk,
+            message,
+            did: "TODO".to_string(),
+            id: env::signer_account_id().to_string(),
+        });
+
+        // Send tip to other user
+        let tip = env::attached_deposit();
+        Promise::new(to).transfer(tip)
+    }
+
+    pub fn get_all_messages() -> String {
+        // TODO:
+        "m".to_string()
+    }
 }
 
 #[cfg(not(target_arch = "wasm32"))]

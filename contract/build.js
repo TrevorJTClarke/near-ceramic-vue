@@ -5,4 +5,4 @@ shell.fatal = true; // same as "set -e"
 shell.cd('contract');
 // Note: see flags in ./cargo/config
 shell.exec('cargo build --target wasm32-unknown-unknown --release');
-shell.cp('./target/wasm32-unknown-unknown/release/dummy_contract.wasm', './res');
+shell.cp('./target/wasm32-unknown-unknown/release/near_ceramic.wasm', './res');

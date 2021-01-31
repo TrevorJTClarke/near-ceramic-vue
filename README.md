@@ -5,12 +5,16 @@
 <img src="https://near.org/wp-content/themes/near-19/assets/img/neue/logo.svg?t=1600963474" width="200">
 </p>
 
+<p>
+<img src="https://ceramic.network/images/ceramic-logo-p-500.png" width="200">
+</p>
+
 <br />
 <br />
 
-# Near Vue Tailwind
+# Near Ceramic Vue
 
-A quick start setup for a dApp in NEAR, Vue 3, Tailwind CSS 2
+A quick start setup for a dApp in NEAR, Ceramic, Vue 3, Tailwind CSS 2
 
 This starter template also includes:
 
@@ -21,6 +25,12 @@ This starter template also includes:
   * [@tailwindcss/forms](https://github.com/tailwindlabs/tailwindcss-forms)
   * [@tailwindcss/typography](https://github.com/tailwindlabs/tailwindcss-typography)
   * [@tailwindcss/aspect-ratio](https://github.com/tailwindlabs/tailwindcss-aspect-ratio)
+
+### Example UI:
+
+<img src="./public/docs/demo.png" width="400">
+
+----
 
 ### Getting Started 🚀
 

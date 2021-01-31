@@ -1,5 +1,5 @@
 <template>
-  <main class="bg-gray-50 dark:bg-gray-900">
+  <main class="bg-gray-50">
     <Header />
 
     <router-view />
@@ -14,9 +14,3 @@ export default {
   },
 }
 </script>
-
-<style>
-.filter-blur {
-  filter: blur(5px)
-}
-</style>

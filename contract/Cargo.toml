@@ -1,5 +1,5 @@
 [package]
-name = "dummy_contract"
+name = "near_ceramic"
 version = "0.0.1"
 authors = ["Zack Kollar (me@seedyrom.io)"]
 edition = "2018"
