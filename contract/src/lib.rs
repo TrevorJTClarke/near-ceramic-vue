@@ -25,7 +25,7 @@ pub struct NearCeramic {
 impl Default for NearCeramic {
     fn default() -> Self {
         Self {
-            messages: Vector::new(b"m".to_vec()),
+            messages: Vector::new(b"m".to_vec())
         }
     }
 }
@@ -57,9 +57,9 @@ impl NearCeramic {
         Promise::new(to).transfer(tip)
     }
 
-    pub fn get_all_messages() -> String {
-        // TODO:
-        "m".to_string()
+    pub fn get_all_messages(&self) -> Vector<Message> {
+        // self.messages
+        Vector::new(b"m".to_vec())
     }
 }
 
