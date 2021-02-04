@@ -6,6 +6,7 @@ import App from './App.vue'
 import { routes } from './routes.js'
 import storage from './store'
 import VueNear from 'vue-near'
+import VueCeramic from './plugins/ceramic'
 
 const app = createApp(App)
 const store = createStore(storage)
@@ -37,6 +38,20 @@ if (import.meta.hot) {
 
 app.use(router)
 app.use(store)
-app.use(VueNear, { env: process.env.NODE_ENV || 'development' })
+app.use(VueNear, {
+  // Configures NEAR RPC Provider
+  env: process.env.NODE_ENV || 'development',
+  config: {
+    // Allows your contract to be fixed, or dynamic
+    contractName: process.env.NEAR_CONTRACT_ID || 'nearceramictest.t.testnet',
+  }
+})
+app.use(VueCeramic, {
+  // Allows gateway configuration based on environment
+  env: process.env.NODE_ENV || 'development',
+
+  // Allows gateway override to a specific url {OPTIONAL}
+  // apiUrl: 'https://yourEndpoint.com'
+})
 
 app.mount('#app')

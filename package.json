@@ -24,6 +24,7 @@
     "Tailwind"
   ],
   "dependencies": {
+    "@ceramicnetwork/http-client": "^0.9.5",
     "luxon": "^1.25.0",
     "vue": "^3.0.4",
     "vue-axios": "^3.2.1",

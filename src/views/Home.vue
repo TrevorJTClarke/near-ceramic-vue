@@ -93,10 +93,10 @@
           <h2 class="text-base text-green-600 font-semibold tracking-wide uppercase">{{ messages.length ? 'All' : 'No' }} Messages</h2>
         </div>
 
-        <div class="mt-10">
+        <div v-if="messages.length > 0" class="mt-10">
           <dl class="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
 
-            <div v-for="msg in messages" :key="msg">
+            <div v-for="msg in messages" :key="msg.timestamp">
               <div class="shadow sm:rounded-md sm:overflow-hidden px-4 py-5 bg-white space-y-2 sm:p-6">
                 <dt class="flex text-lg leading-6 font-medium text-gray-900">
                   <svg class="mr-1 h-5 w-5 stroke-current text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -192,11 +192,19 @@ const dummy = [
   },
 ]
 
+// Contract Function Spec:
+const contractSpec = {
+  changeMethods: ['create_message'],
+  viewMethods: ['get_count', 'get_doc_id'],
+}
+
 export default {
   name: 'Home',
 
   data() {
     return {
+      contract: null,
+
       messages: [...dummy],
 
       to_account_id: '',
@@ -212,6 +220,7 @@ export default {
   methods: {
     async login() {
       await this.$near.loginAccount()
+      this.loadContract()
     },
     getFormattedTs(ts) {
       return DateTime.fromMillis(ts).toFormat('LLL dd yyyy')
@@ -220,22 +229,79 @@ export default {
     // This handles the magix! Get all fields, format for sending to chain.
     submitMessage() {
       if (!this.to_account_id || !this.new_message) return
-      const payload = {
+      if (this.contract) {
+        alert('Contract is not ready yet.')
+        return
+      }
+      const content = {
         to: this.to_account_id,
         body: this.new_message,
         tip: parseInt(this.tip_amount || 0),
         timestamp: +new Date(),
         from: this.account_id,
       }
-      console.log('HERE!!!!!!!', payload)
+
+      // Send 
+      const doc = await this.$ceramic.createDocument('tile', {
+        content,
+        metadata: {
+          schema: "ceramic://kyz123...456",
+          controllers: ["did:3:kyz123...456"],
+          family: "doc family"
+        }
+      })
+
+      // Send to NEAR
+      await this.contract.create_message({
+        to: content.to,
+        doc_id: 
+      })
 
       // Update the UI
-      this.messages.unshift(payload)
+      this.messages.unshift(content)
 
       // Remove the fields data, so we can do a fresh message
       this.to_account_id = ''
       this.new_message = ''
       this.tip_amount = ''
+    },
+
+    loadContract() {
+      if (this.contract) return
+      this.contract = this.$near.getContractInstance(
+        this.$near.config.contractName,
+        contractSpec,
+      )
+    },
+
+    async loadMessages() {
+      // get the total, so we can know where to pull latest from
+      const totalMessages = await this.contract.get_count()
+      const ids = []
+      const p = []
+
+      // Query docIds from NEAR
+      for (let i = 0; i < 11; i++) {
+        p.push(async () => {
+          const id = this.contract.get_doc_id({ index: totalMessages - i })
+          ids.push(id)
+        })
+      }
+      await Promise.all(p)
+
+      if (ids) {
+        ids.forEach(docId => {
+          // get data from Ceramic
+          // docId = 'kjzl6cwe1jw14...'
+          const doc = await ceramic.loadDocument(docId)
+          // Format if needed
+          this.messages.push(doc)
+        })
+      }
+    },
+
+    mounted() {
+      this.loadContract()
     },
   },
 
