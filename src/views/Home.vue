@@ -227,7 +227,7 @@ export default {
     },
 
     // This handles the magix! Get all fields, format for sending to chain.
-    submitMessage() {
+    async submitMessage() {
       if (!this.to_account_id || !this.new_message) return
       if (this.contract) {
         alert('Contract is not ready yet.')
@@ -254,7 +254,7 @@ export default {
       // Send to NEAR
       await this.contract.create_message({
         to: content.to,
-        doc_id: 
+        // doc_id: 
       })
 
       // Update the UI
@@ -290,7 +290,7 @@ export default {
       await Promise.all(p)
 
       if (ids) {
-        ids.forEach(docId => {
+        ids.forEach(async docId => {
           // get data from Ceramic
           // docId = 'kjzl6cwe1jw14...'
           const doc = await ceramic.loadDocument(docId)

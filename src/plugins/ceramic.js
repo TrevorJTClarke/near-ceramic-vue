@@ -1,4 +1,4 @@
-import CeramicClient from '@ceramicnetwork/http-client'
+// import CeramicClient from '@ceramicnetwork/http-client'
 
 // REF: https://developers.ceramic.network/build/installation/
 export function getConfig(env, options = {}) {

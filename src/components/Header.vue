@@ -50,14 +50,9 @@
 
 <script>
 import { mapActions } from 'vuex'
-import ToggleTheme from './ToggleTheme.vue'
 
 export default {
   name: 'Header',
-
-  components: {
-    ToggleTheme,
-  },
 
   data() {
     return {
