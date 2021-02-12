@@ -24,8 +24,10 @@
     "Tailwind"
   ],
   "dependencies": {
-    "@ceramicnetwork/http-client": "^0.9.5",
+    "@ceramicnetwork/blockchain-utils-linking": "^0.1.1-rc.0",
+    "@ceramicnetwork/http-client": "^0.9.7-rc.0",
     "luxon": "^1.25.0",
+    "uint8arrays": "^2.1.2",
     "vue": "^3.0.4",
     "vue-axios": "^3.2.1",
     "vue-near": "^0.2.1",
@@ -42,6 +44,8 @@
     "cross-env": "^7.0.3",
     "near-api-js": "^0.36.2",
     "postcss": "^7.0.35",
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-globals": "^1.4.0",
     "shelljs": "^0.8.4",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
     "vite": "^2.0.0-beta.8"

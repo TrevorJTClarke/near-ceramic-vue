@@ -87,6 +87,7 @@ export default {
     },
     logout() {
       this.$near.logoutAccount()
+      this.accountId = null
     },
     setAccount() {
       this.accountId = this.$near.user && this.$near.user.accountId ? this.$near.user.accountId : null

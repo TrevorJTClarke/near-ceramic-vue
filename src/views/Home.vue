@@ -218,8 +218,18 @@ export default {
   },
 
   methods: {
+    // NOTE: Key logic flow here!
     async login() {
+      // 1. Login with NEAR protocol, so we have wallet keypair for signing
       await this.$near.loginAccount()
+      console.log(this.$near)
+      return
+
+      // 2. Authenticate with Ceramic, based on NEAR credentials
+      const nearKeyInstance = ''
+      await this.$setCeramicProvider(nearKeyInstance)
+
+      // 3. Load contract with all the context needed
       this.loadContract()
     },
     getFormattedTs(ts) {
@@ -227,7 +237,7 @@ export default {
     },
 
     // This handles the magix! Get all fields, format for sending to chain.
-    submitMessage() {
+    async submitMessage() {
       if (!this.to_account_id || !this.new_message) return
       if (this.contract) {
         alert('Contract is not ready yet.')
@@ -245,16 +255,18 @@ export default {
       const doc = await this.$ceramic.createDocument('tile', {
         content,
         metadata: {
-          schema: "ceramic://kyz123...456",
-          controllers: ["did:3:kyz123...456"],
-          family: "doc family"
+          // NOTE: using defaults here
+          // schema: "ceramic://kyz123...456",
+          // controllers: ["did:3:kyz123...456"],
+          family: 'near_ceramic_demo'
         }
       })
+      console.log('doc', doc)
 
       // Send to NEAR
       await this.contract.create_message({
         to: content.to,
-        doc_id: 
+        doc_id: doc
       })
 
       // Update the UI
@@ -266,8 +278,9 @@ export default {
       this.tip_amount = ''
     },
 
-    loadContract() {
+    async loadContract() {
       if (this.contract) return
+      console.log('this.$near.config.contractName', this.$near.config.contractName)
       this.contract = this.$near.getContractInstance(
         this.$near.config.contractName,
         contractSpec,
@@ -277,20 +290,12 @@ export default {
     async loadMessages() {
       // get the total, so we can know where to pull latest from
       const totalMessages = await this.contract.get_count()
-      const ids = []
-      const p = []
-
-      // Query docIds from NEAR
-      for (let i = 0; i < 11; i++) {
-        p.push(async () => {
-          const id = this.contract.get_doc_id({ index: totalMessages - i })
-          ids.push(id)
-        })
-      }
-      await Promise.all(p)
+      const raw_ids = await this.contract.get_doc_ids()
+      const ids = raw_ids.slice(0, -1).split(',')
+      console.log('ids', ids)
 
       if (ids) {
-        ids.forEach(docId => {
+        ids.forEach(async docId => {
           // get data from Ceramic
           // docId = 'kjzl6cwe1jw14...'
           const doc = await ceramic.loadDocument(docId)
@@ -300,8 +305,9 @@ export default {
       }
     },
 
-    mounted() {
-      this.loadContract()
+    async mounted() {
+      await this.loadContract()
+      await this.loadMessages()
     },
   },
 

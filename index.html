@@ -11,6 +11,9 @@
     <div id="app"></div>
     <!-- Build with Vite is messing import up somehow using local dep instead! -->
     <script src="/node_modules/near-api-js/dist/near-api-js.js"></script>
+    <!-- Build with Vite is messing this up somehow! -->
+    <script src="/node_modules/@ceramicnetwork/http-client/lib/ceramic-http-client.d.ts" type="module"></script>
+    <script src="/node_modules/@ceramicnetwork/blockchain-utils-linking/lib/index.d.ts" type="module"></script>
     <!-- <script src="https://cdn.jsdelivr.net/gh/nearprotocol/near-api-js/dist/near-api-js.js"></script> -->
     <script type="module" src="/src/main.js"></script>
   </body>

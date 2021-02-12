@@ -1,6 +1,6 @@
 use borsh::{ BorshDeserialize, BorshSerialize };
 use near_sdk::{
-    env, near_bindgen, AccountId, PublicKey, Promise,
+    env, near_bindgen, AccountId, Promise,
     collections::{ Vector },
 };
 
@@ -9,13 +9,9 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize)]
-pub struct Message {
-    pub doc_id: String
-}
-
-#[derive(BorshDeserialize, BorshSerialize)]
 pub struct NearCeramic {
-    pub messages: Vector<Message>,
+    // String is the DOC_ID for Ceramic
+    pub messages: Vector<String>,
 }
 
 impl Default for NearCeramic {
@@ -37,9 +33,7 @@ impl NearCeramic {
     ) -> Promise {
         assert!(env::is_valid_account_id(to.as_bytes()), "Invalid account id");
 
-        self.messages.push(&Message {
-            doc_id,
-        });
+        self.messages.push(&doc_id);
 
         // Send tip to other user
         let tip = env::attached_deposit();
@@ -50,8 +44,14 @@ impl NearCeramic {
         self.messages.len()
     }
 
-    pub fn get_doc_id(&self, index: u64) -> Message {
+    pub fn get_doc_id(&self, index: u64) -> String {
         self.messages.get(index).unwrap()
+    }
+
+    pub fn get_doc_ids(&self) -> String {
+        self.messages.iter()
+            .map(|x| x + ",")
+            .collect()
     }
 }
 

@@ -34,9 +34,21 @@ This starter template also includes:
 
 ### Getting Started 🚀
 
+#### Install
+
 npm:
 ```sh
 npm install
+```
+yarn:
+```sh
+yarn
+```
+
+#### Development
+
+npm:
+```sh
 npm run dev
 npm run build
 npm run contract:build
@@ -46,7 +58,6 @@ npm run contract:test
 ```
 yarn:
 ```sh
-yarn
 yarn dev
 yarn build
 yarn contract:build
@@ -58,6 +69,27 @@ yarn contract:test
 ### Bonus
 - [vue-tailwindcss-cdn](https://github.com/web2033/vue-tailwindcss-cdn) (a single HTML file with CDN links)
 - [CodePen Template](https://codepen.io/web2033/pen/QWNbwxY) with a similar stack (Vue 3.x + Tailwind 2.x + Inter var font)
+
+## Near Contract
+
+Commands for testing. NOTE: You must change the account id to the contract YOU own. `dev-1612737149816-4004648` is the dev account created during `dev-deploy`, yours will be different. See console output.
+
+```js
+// Deploy
+near dev-deploy --wasmFile ./contract/res/near_ceramic.wasm
+
+// Create a message
+near call dev-1612737149816-4004648 create_message '{"to": "t.testnet","doc_id":"did:..."}' --accountId t.testnet
+
+// get total messages
+near view dev-1612737149816-4004648 get_count --accountId t.testnet
+
+// get single message
+near view dev-1612737149816-4004648 get_doc_id '{"index":1}' --accountId t.testnet
+
+// get all messages
+near view dev-1612737149816-4004648 get_doc_ids --accountId t.testnet
+```
 
 ## Showcase
 
